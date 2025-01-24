@@ -1,13 +1,9 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { useSignIn } from '@clerk/clerk-expo'
 import { router, useLocalSearchParams } from 'expo-router'
+import { PasswordInput } from '@/components/PasswordInput'
+import { TextInput } from '@/components/TextInput'
 
 const ResetPasswordScreen = () => {
   const { email } = useLocalSearchParams<{ email: string }>()
@@ -43,19 +39,12 @@ const ResetPasswordScreen = () => {
         Enter the code sent to {email} and your new password
       </Text>
 
-      <TextInput
-        placeholder='Reset Code'
-        value={code}
-        onChangeText={setCode}
-        style={styles.input}
-      />
+      <TextInput placeholder='Reset Code' value={code} onChangeText={setCode} />
 
-      <TextInput
+      <PasswordInput
         placeholder='New Password'
         value={newPassword}
         onChangeText={setNewPassword}
-        secureTextEntry
-        style={styles.input}
       />
 
       <TouchableOpacity
@@ -89,13 +78,6 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 15,
-    marginBottom: 20,
-    borderRadius: 5,
   },
   button: {
     backgroundColor: '#000',

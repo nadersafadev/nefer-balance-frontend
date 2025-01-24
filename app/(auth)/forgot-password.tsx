@@ -1,13 +1,8 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { useSignIn } from '@clerk/clerk-expo'
 import { router } from 'expo-router'
+import { TextInput } from '@/components/TextInput'
 
 const ForgotPasswordScreen = () => {
   const [emailAddress, setEmailAddress] = useState('')
@@ -52,7 +47,6 @@ const ForgotPasswordScreen = () => {
         placeholder='Email'
         value={emailAddress}
         onChangeText={setEmailAddress}
-        style={styles.input}
       />
 
       <TouchableOpacity
@@ -90,13 +84,6 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 15,
-    marginBottom: 20,
-    borderRadius: 5,
   },
   button: {
     backgroundColor: '#000',

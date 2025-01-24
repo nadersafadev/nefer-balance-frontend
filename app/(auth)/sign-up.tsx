@@ -1,13 +1,9 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { useSignUp } from '@clerk/clerk-expo'
-import { router } from 'expo-router'
+import { Link } from 'expo-router'
+import { TextInput } from '@/components/TextInput'
+import { PasswordInput } from '@/components/PasswordInput'
 
 const SignUpScreen = () => {
   const [emailAddress, setEmailAddress] = useState('')
@@ -15,7 +11,7 @@ const SignUpScreen = () => {
   const [pendingVerification, setPendingVerification] = useState(false)
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
-  const { signUp, isLoaded } = useSignUp()
+  const { signUp, isLoaded, setActive } = useSignUp()
 
   const onSignUp = async () => {
     if (!isLoaded) return
@@ -51,9 +47,7 @@ const SignUpScreen = () => {
         code,
       })
 
-      await completeSignUp.createdSessionId
-
-      router.push('/(home)')
+      await setActive!({ session: completeSignUp?.createdSessionId })
     } catch (err: any) {
       alert(err.errors[0].message)
     } finally {
@@ -73,15 +67,12 @@ const SignUpScreen = () => {
             placeholder='Email'
             value={emailAddress}
             onChangeText={setEmailAddress}
-            style={styles.input}
           />
 
-          <TextInput
+          <PasswordInput
             placeholder='Password'
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
-            style={styles.input}
           />
 
           <TouchableOpacity
@@ -105,7 +96,6 @@ const SignUpScreen = () => {
             placeholder='Verification Code'
             value={code}
             onChangeText={setCode}
-            style={styles.input}
           />
 
           <TouchableOpacity
@@ -120,12 +110,13 @@ const SignUpScreen = () => {
         </>
       )}
 
-      <TouchableOpacity
-        onPress={() => router.push('/sign-in')}
-        style={styles.footerButton}
-      >
-        <Text style={styles.footerText}>Already have an account? Sign In</Text>
-      </TouchableOpacity>
+      <Link href='/sign-in' asChild>
+        <TouchableOpacity style={styles.footerButton}>
+          <Text style={styles.footerText}>
+            Already have an account? Sign In
+          </Text>
+        </TouchableOpacity>
+      </Link>
     </View>
   )
 }
@@ -148,13 +139,6 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 15,
-    marginBottom: 20,
-    borderRadius: 5,
   },
   button: {
     backgroundColor: '#000',

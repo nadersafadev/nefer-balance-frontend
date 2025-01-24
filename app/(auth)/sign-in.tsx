@@ -1,13 +1,9 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { useSignIn } from '@clerk/clerk-expo'
-import { router } from 'expo-router'
+import { Link } from 'expo-router'
+import { PasswordInput } from '@/components/PasswordInput'
+import { TextInput } from '@/components/TextInput'
 
 const SignInScreen = () => {
   const [emailAddress, setEmailAddress] = useState('')
@@ -27,8 +23,6 @@ const SignInScreen = () => {
 
       // Set the active session
       await setActive!({ session: completeSignIn?.createdSessionId })
-
-      router.replace('/(home)')
     } catch (err: any) {
       alert(err.errors[0].message)
     } finally {
@@ -46,15 +40,12 @@ const SignInScreen = () => {
         placeholder='Email'
         value={emailAddress}
         onChangeText={setEmailAddress}
-        style={styles.input}
       />
 
-      <TextInput
+      <PasswordInput
         placeholder='Password'
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
       />
 
       <TouchableOpacity
@@ -68,13 +59,17 @@ const SignInScreen = () => {
       </TouchableOpacity>
 
       <View style={styles.footerContainer}>
-        <TouchableOpacity onPress={() => router.push('/forgot-password')}>
-          <Text style={styles.footerText}>Forgot Password?</Text>
-        </TouchableOpacity>
+        <Link href='/forgot-password' asChild>
+          <TouchableOpacity>
+            <Text style={styles.footerText}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </Link>
 
-        <TouchableOpacity onPress={() => router.push('/sign-up')}>
-          <Text style={styles.footerText}>Create Account</Text>
-        </TouchableOpacity>
+        <Link href='/sign-up' asChild>
+          <TouchableOpacity>
+            <Text style={styles.footerText}>Create Account</Text>
+          </TouchableOpacity>
+        </Link>
       </View>
     </View>
   )
@@ -98,13 +93,6 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 15,
-    marginBottom: 20,
-    borderRadius: 5,
   },
   button: {
     backgroundColor: '#000',
