@@ -9,26 +9,29 @@ import React, { useState } from 'react'
 import { useSignIn } from '@clerk/clerk-expo'
 import { router } from 'expo-router'
 
-const SignInScreen = () => {
+const ForgotPasswordScreen = () => {
   const [emailAddress, setEmailAddress] = useState('')
-  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { signIn, setActive } = useSignIn()
+  const [success, setSuccess] = useState(false)
+  const { signIn } = useSignIn()
 
-  const onSignIn = async () => {
+  const onRequestReset = async () => {
     try {
       setLoading(true)
 
-      // Start the sign in process
-      const completeSignIn = await signIn?.create({
+      // Start the password reset flow
+      await signIn?.create({
+        strategy: 'reset_password_email_code',
         identifier: emailAddress,
-        password,
       })
 
-      // Set the active session
-      await setActive!({ session: completeSignIn?.createdSessionId })
+      setSuccess(true)
 
-      router.replace('/(home)')
+      // Navigate to reset password code verification
+      router.push({
+        pathname: '/reset-password',
+        params: { email: emailAddress },
+      })
     } catch (err: any) {
       alert(err.errors[0].message)
     } finally {
@@ -38,8 +41,11 @@ const SignInScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
-      <Text style={styles.subtitle}>Sign in to your account to continue</Text>
+      <Text style={styles.title}>Reset Password</Text>
+      <Text style={styles.subtitle}>
+        Enter your email address and we'll send you instructions to reset your
+        password.
+      </Text>
 
       <TextInput
         autoCapitalize='none'
@@ -49,33 +55,19 @@ const SignInScreen = () => {
         style={styles.input}
       />
 
-      <TextInput
-        placeholder='Password'
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-
       <TouchableOpacity
         style={styles.button}
-        onPress={onSignIn}
-        disabled={loading || !emailAddress || !password}
+        onPress={onRequestReset}
+        disabled={loading || !emailAddress}
       >
         <Text style={styles.buttonText}>
-          {loading ? 'Signing in...' : 'Sign In'}
+          {loading ? 'Sending...' : 'Reset Password'}
         </Text>
       </TouchableOpacity>
 
-      <View style={styles.footerContainer}>
-        <TouchableOpacity onPress={() => router.push('/forgot-password')}>
-          <Text style={styles.footerText}>Forgot Password?</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => router.push('/sign-up')}>
-          <Text style={styles.footerText}>Create Account</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <Text style={styles.backButtonText}>Back to Sign In</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -117,15 +109,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  footerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  backButton: {
     marginTop: 20,
+    alignItems: 'center',
   },
-  footerText: {
+  backButtonText: {
     color: '#666',
     fontSize: 14,
   },
 })
 
-export default SignInScreen
+export default ForgotPasswordScreen

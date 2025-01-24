@@ -1,100 +1,180 @@
-import * as React from 'react'
-import { Text, TextInput, Button, View } from 'react-native'
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native'
+import React, { useState } from 'react'
 import { useSignUp } from '@clerk/clerk-expo'
-import { useRouter } from 'expo-router'
+import { router } from 'expo-router'
 
-export default function SignUpScreen() {
-  const { isLoaded, signUp, setActive } = useSignUp()
-  const router = useRouter()
+const SignUpScreen = () => {
+  const [emailAddress, setEmailAddress] = useState('')
+  const [password, setPassword] = useState('')
+  const [pendingVerification, setPendingVerification] = useState(false)
+  const [code, setCode] = useState('')
+  const [loading, setLoading] = useState(false)
+  const { signUp, isLoaded } = useSignUp()
 
-  const [emailAddress, setEmailAddress] = React.useState('')
-  const [password, setPassword] = React.useState('')
-  const [pendingVerification, setPendingVerification] = React.useState(false)
-  const [code, setCode] = React.useState('')
-
-  // Handle submission of sign-up form
-  const onSignUpPress = async () => {
+  const onSignUp = async () => {
     if (!isLoaded) return
 
-    // Start sign-up process using email and password provided
     try {
+      setLoading(true)
+
+      // Start the sign up process
       await signUp.create({
         emailAddress,
         password,
       })
 
-      // Send user an email with verification code
+      // Send verification email
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
 
-      // Set 'pendingVerification' to true to display second form
-      // and capture OTP code
       setPendingVerification(true)
-    } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2))
+    } catch (err: any) {
+      alert(err.errors[0].message)
+    } finally {
+      setLoading(false)
     }
   }
 
-  // Handle submission of verification form
-  const onVerifyPress = async () => {
+  const onVerify = async () => {
     if (!isLoaded) return
 
     try {
-      // Use the code the user provided to attempt verification
-      const signUpAttempt = await signUp.attemptEmailAddressVerification({
+      setLoading(true)
+
+      // Attempt to verify email
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
       })
 
-      // If verification was completed, set the session to active
-      // and redirect the user
-      if (signUpAttempt.status === 'complete') {
-        await setActive({ session: signUpAttempt.createdSessionId })
-        router.replace('/')
-      } else {
-        // If the status is not complete, check why. User may need to
-        // complete further steps.
-        console.error(JSON.stringify(signUpAttempt, null, 2))
-      }
-    } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2))
+      await completeSignUp.createdSessionId
+
+      router.push('/(home)')
+    } catch (err: any) {
+      alert(err.errors[0].message)
+    } finally {
+      setLoading(false)
     }
   }
 
-  if (pendingVerification) {
-    return (
-      <>
-        <Text>Verify your email</Text>
-        <TextInput
-          value={code}
-          placeholder='Enter your verification code'
-          onChangeText={(code) => setCode(code)}
-        />
-        <Button title='Verify' onPress={onVerifyPress} />
-      </>
-    )
-  }
-
   return (
-    <View>
-      <>
-        <Text>Sign up</Text>
-        <TextInput
-          autoCapitalize='none'
-          value={emailAddress}
-          placeholder='Enter email'
-          onChangeText={(email) => setEmailAddress(email)}
-        />
-        <TextInput
-          value={password}
-          placeholder='Enter password'
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-        <Button title='Continue' onPress={onSignUpPress} />
-      </>
+    <View style={styles.container}>
+      {!pendingVerification ? (
+        <>
+          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.subtitle}>Sign up to get started</Text>
+
+          <TextInput
+            autoCapitalize='none'
+            placeholder='Email'
+            value={emailAddress}
+            onChangeText={setEmailAddress}
+            style={styles.input}
+          />
+
+          <TextInput
+            placeholder='Password'
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.input}
+          />
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={onSignUp}
+            disabled={loading || !emailAddress || !password}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Creating...' : 'Create Account'}
+            </Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <Text style={styles.title}>Verify Email</Text>
+          <Text style={styles.subtitle}>
+            We've sent a verification code to {emailAddress}
+          </Text>
+
+          <TextInput
+            placeholder='Verification Code'
+            value={code}
+            onChangeText={setCode}
+            style={styles.input}
+          />
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={onVerify}
+            disabled={loading || !code}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Verifying...' : 'Verify Email'}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      <TouchableOpacity
+        onPress={() => router.push('/sign-in')}
+        style={styles.footerButton}
+      >
+        <Text style={styles.footerText}>Already have an account? Sign In</Text>
+      </TouchableOpacity>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 15,
+    marginBottom: 20,
+    borderRadius: 5,
+  },
+  button: {
+    backgroundColor: '#000',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  footerButton: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  footerText: {
+    color: '#666',
+    fontSize: 14,
+  },
+})
+
+export default SignUpScreen

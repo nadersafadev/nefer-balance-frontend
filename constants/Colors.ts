@@ -1,19 +1,28 @@
-const tintColorLight = '#2f95dc';
-const tintColorDark = '#fff';
+export const colors = {
+  // Primary colors
+  primary: {
+    main: '#117E87', // Teal
+    dark: '#113E42', // Dark Teal
+    light: '#108A94', // Light Teal
+  },
 
-export default {
-  light: {
-    text: '#000',
-    background: '#fff',
-    tint: tintColorLight,
-    tabIconDefault: '#ccc',
-    tabIconSelected: tintColorLight,
+  // Background colors
+  background: {
+    default: '#FDFDFD', // Almost White
+    paper: '#D9D9D9', // Light Gray
   },
-  dark: {
-    text: '#fff',
-    background: '#000',
-    tint: tintColorDark,
-    tabIconDefault: '#ccc',
-    tabIconSelected: tintColorDark,
+
+  // Text colors
+  text: {
+    primary: '#101010', // Almost Black
   },
-};
+
+  // Accent colors
+  accent: {
+    light: '#E6FEFE', // Very Light Teal
+    lighter: '#D1F5F5', // Slightly Darker Light Teal
+  },
+} as const
+
+// Type for autocompletion and type safety
+export type ColorTheme = typeof colors
