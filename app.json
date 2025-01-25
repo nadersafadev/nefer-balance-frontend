@@ -52,6 +52,12 @@
         "projectId": "08122574-58b6-4293-b775-98de4f4e3f10"
       }
     },
-    "owner": "nader.safa.dev"
+    "owner": "nader.safa.dev",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/08122574-58b6-4293-b775-98de4f4e3f10"
+    }
   }
 }
