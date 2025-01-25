@@ -4,12 +4,12 @@
     "slug": "equa-wallet",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/Equa-Icon.png",
+    "icon": "./assets/images/Equa-Icon.jpg",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/Equa-SplashScreen.png",
+      "image": "./assets/images/Equa-SplashScreen.jpg",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/Equa-Icon.png",
+        "foregroundImage": "./assets/images/Equa-Icon.jpg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.nader.safa.dev.neferbalance"
@@ -27,7 +27,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/Equa-Icon.png"
+      "favicon": "./assets/images/Equa-Icon.jpg"
     },
     "plugins": [
       "expo-router",
@@ -49,8 +49,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "f20f1523-331d-466c-93e8-5603108cdf3a"
+        "projectId": "08122574-58b6-4293-b775-98de4f4e3f10"
       }
-    }
+    },
+    "owner": "nader.safa.dev"
   }
 }

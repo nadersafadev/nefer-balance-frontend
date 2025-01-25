@@ -12,8 +12,9 @@ import {
 } from '@react-navigation/native'
 import { Redirect, Stack } from 'expo-router'
 import { useColorScheme } from 'react-native'
+import getEnvVars from '@/config/env'
 
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
+const { CLERK_PUBLISHABLE_KEY } = getEnvVars()
 
 export default function RootLayout() {
   const colorScheme = useColorScheme()

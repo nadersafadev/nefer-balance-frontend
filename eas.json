@@ -5,18 +5,12 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "env": {
-        "CLERK_PUBLISHABLE_KEY": "your_clerk_key_here"
-      }
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      },
-      "env": {
-        "CLERK_PUBLISHABLE_KEY": "pk_live_Y2xlcmstZXhwLXVzZXIteW91ci1jbGllcnMtdG9rZW4tY29uZmx1ZW5jZS1pbi10aGUtY2xlcms"
       }
     },
     "preview2": {
@@ -30,10 +24,6 @@
     "preview4": {
       "distribution": "internal"
     },
-    "production": {
-      "env": {
-        "CLERK_PUBLISHABLE_KEY": "your_clerk_key_here"
-      }
-    }
+    "production": {}
   }
 }
