@@ -4,11 +4,11 @@ export default function ProfileLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
         headerStyle: {
           backgroundColor: '#fff',
         },
         headerTintColor: '#000',
+        headerBackTitle: '',
       }}
     >
       <Stack.Screen
@@ -30,9 +30,27 @@ export default function ProfileLayout() {
         }}
       />
       <Stack.Screen
-        name='change-password'
+        name='notifications'
         options={{
-          title: 'Change Password',
+          title: 'Notifications',
+        }}
+      />
+      <Stack.Screen
+        name='privacy'
+        options={{
+          title: 'Privacy',
+        }}
+      />
+      <Stack.Screen
+        name='help'
+        options={{
+          title: 'Help & Support',
+        }}
+      />
+      <Stack.Screen
+        name='about'
+        options={{
+          title: 'About',
         }}
       />
     </Stack>

@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "nefer-balance",
-    "slug": "nefer-balance",
+    "name": "equa-wallet",
+    "slug": "equa-wallet",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/Equa-Icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
+      "image": "./assets/images/Equa-SplashScreen.png",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "ios": {
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/Equa-Icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.nader.safa.dev.neferbalance"
@@ -27,7 +27,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/Equa-Icon.png"
     },
     "plugins": [
       "expo-router",

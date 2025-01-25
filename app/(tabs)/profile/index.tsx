@@ -1,13 +1,50 @@
-import { View, Text, StyleSheet, Pressable, Image } from 'react-native'
-import { useUser, useAuth } from '@clerk/clerk-expo'
-import { useRouter } from 'expo-router'
+import { useAuth, useUser } from '@clerk/clerk-expo'
 import { MaterialIcons } from '@expo/vector-icons'
+import { Route, useRouter } from 'expo-router'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 export default function ProfileScreen() {
   const { user } = useUser()
   const { signOut } = useAuth()
   const router = useRouter()
   const primaryColor = '#000'
+
+  const menuItems: {
+    icon: keyof typeof MaterialIcons.glyphMap
+    text: string
+    route: Route
+  }[] = [
+    {
+      icon: 'person',
+      text: 'Edit Profile',
+      route: '/profile/edit',
+    },
+    {
+      icon: 'security',
+      text: 'Security',
+      route: '/profile/security',
+    },
+    {
+      icon: 'notifications',
+      text: 'Notifications',
+      route: '/profile/notifications',
+    },
+    {
+      icon: 'lock',
+      text: 'Privacy',
+      route: '/profile/privacy',
+    },
+    {
+      icon: 'help',
+      text: 'Help & Support',
+      route: '/profile/help',
+    },
+    {
+      icon: 'info',
+      text: 'About',
+      route: '/profile/about',
+    },
+  ]
 
   return (
     <View style={styles.container}>
@@ -37,23 +74,20 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.menuContainer}>
-          <Pressable
-            style={styles.menuItem}
-            onPress={() => router.push('/profile/edit')}
-          >
-            <MaterialIcons name='person' size={24} color={primaryColor} />
-            <Text style={styles.menuText}>Edit Profile</Text>
-            <MaterialIcons name='chevron-right' size={24} color='#6B7280' />
-          </Pressable>
-
-          <Pressable
-            style={styles.menuItem}
-            onPress={() => router.push('/profile/security')}
-          >
-            <MaterialIcons name='security' size={24} color={primaryColor} />
-            <Text style={styles.menuText}>Security</Text>
-            <MaterialIcons name='chevron-right' size={24} color='#6B7280' />
-          </Pressable>
+          {menuItems.map((item, index) => (
+            <Pressable
+              key={item.route}
+              style={[
+                styles.menuItem,
+                index === menuItems.length - 1 && styles.lastMenuItem,
+              ]}
+              onPress={() => router.push(item.route)}
+            >
+              <MaterialIcons name={item.icon} size={24} color={primaryColor} />
+              <Text style={styles.menuText}>{item.text}</Text>
+              <MaterialIcons name='chevron-right' size={24} color='#6B7280' />
+            </Pressable>
+          ))}
 
           <Pressable
             style={[styles.menuItem, styles.signOutButton]}
@@ -137,6 +171,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
   },
+  lastMenuItem: {
+    borderBottomWidth: 0,
+  },
   menuText: {
     flex: 1,
     marginLeft: 16,
@@ -144,6 +181,7 @@ const styles = StyleSheet.create({
     color: '#111827',
   },
   signOutButton: {
+    marginTop: 20,
     borderBottomWidth: 0,
   },
   signOutText: {
